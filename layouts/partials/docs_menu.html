@@ -1,0 +1,34 @@
+{{ $site := .Site }}
+{{ $page := .page }}
+{{ $root_docs_path := $site.Data.doc_sections.root_docs_path }}
+{{ $root_page := .Site.GetPage "page" $root_docs_path }}
+
+<nav id="docs-nav" class="docs-nav">
+  <div id="docs-nav-inside" class="docs-nav-inside sticky">
+    <button id="docs-nav-toggle" class="docs-nav-toggle">Navigate Docs<span class="icon-angle-right" aria-hidden="true"></span></button>
+    <div class="docs-nav-menu">
+      <ul id="docs-menu" class="docs-menu">
+        <li class="docs-menu-item{{ if eq $page.URL $root_page.URL }} current{{ end }}">
+          <a href="{{ $root_page.URL }}">{{ $root_page.Title }}</a>
+        </li>
+        {{ range $section := $site.Data.doc_sections.sections }}
+          {{ $section_path := path.Join $root_docs_path $section }}
+          {{ $section_page := $.Site.GetPage "page" $section_path }}
+          {{ $child_pages := (($.Site.GetPage "section" $section_path).Pages).ByWeight }}
+          {{ $child_count := $child_pages | len }}
+          {{ $has_children := cond (gt $child_count 0) true false }}
+          {{ $is_current_page := cond (eq $page.URL $section_page.URL) true false }}
+          {{ $is_active := strings.HasPrefix $page.URL $section_page.URL }}
+          <li class="docs-menu-item{{ if $has_children }} has-children{{ end }}{{ if $is_current_page }} current{{ end }}{{ if $is_active }} active{{ end }}">
+            <a href="{{ $section_page.URL }}">{{ $section_page.Title }}</a>
+            {{ if $has_children }}
+              <button class="docs-submenu-toggle"><span class="screen-reader-text">Submenu</span><span class="icon-angle-right" aria-hidden="true"></span></button>
+              {{ $include_dict := dict "child_pages" $child_pages "page" $page "Site" $site }}
+              {{ partial "docs_submenu.html" $include_dict }}
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul><!-- .docs-menu -->
+    </div><!-- .docs-nav-menu -->
+  </div><!-- .docs-nav-inside -->
+</nav><!-- .docs-nav -->

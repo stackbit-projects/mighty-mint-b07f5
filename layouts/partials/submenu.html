@@ -1,0 +1,11 @@
+{{ $page := .page }}
+<ul class="{{ .menu_class }}">
+{{ range $action := .submenu }}
+  {{ $page_url := trim $page.URL "/" }}
+  {{ $action_url := trim $action.url "/" }}
+  <li class="menu-item{{ if eq $page_url $action_url }} current{{ end }}{{ if ne $action.style "link" }} menu-button{{ end }}">
+    {{ $include_dict := dict "action" $action }}
+    {{ partial "action_link.html" $include_dict }}
+  </li>
+{{ end }}
+</ul>

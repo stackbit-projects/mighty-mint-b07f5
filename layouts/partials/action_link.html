@@ -1,0 +1,13 @@
+{{ $action := .action }}
+<a href="{{ $action.url | relURL }}"
+  {{ if $action.new_window }} target="_blank"{{ end }}
+  {{ if or $action.new_window $action.no_follow }} rel="{{ if $action.new_window }}noopener {{ end }}{{ if $action.no_follow }}nofollow{{ end }}"{{ end }}
+  class="{{ if ne $action.style "link" }}button{{ end }}{{ if eq $action.style "secondary" }} button-secondary{{ end }}{{ if eq $action.style "icon" }} button-icon{{ end }}">
+  {{ if and (eq $action.style "icon") $action.icon_class }}
+    {{ $include_dict := dict "icon" $action.icon_class }}
+    {{ partial "icon.html" $include_dict }}
+    <span class="screen-reader-text">{{ $action.label }}</span>
+  {{ else }}
+    {{ $action.label }}
+  {{ end }}
+</a>

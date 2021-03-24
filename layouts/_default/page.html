@@ -1,0 +1,24 @@
+{{ define "content" }}
+
+  <article class="post post-full">
+    <header class="post-header has-gradient outer">
+      {{ if .Params.image }}
+      <div class="bg-img" style="background-image: url('{{ $.Params.image | relURL }}')"></div>
+      {{ end }}
+      <div class="inner-sm">
+        <h1 class="post-title">{{ .Params.title }}</h1>
+        {{ if .Params.subtitle }}
+        <div class="post-subtitle">
+          {{ $.Params.subtitle | safeHTML }}
+        </div>
+        {{ end }}
+      </div>
+    </header>
+    <div class="inner-md outer">
+      <div class="post-content">
+        {{ .Content }}
+      </div>
+    </div><!-- .inner-md -->
+  </article><!-- .post -->
+
+{{ end }}

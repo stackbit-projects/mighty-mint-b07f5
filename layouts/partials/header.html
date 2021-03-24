@@ -1,0 +1,36 @@
+<header id="masthead" class="site-header outer">
+  <div class="inner">
+    <div class="site-header-inside">
+      <div class="site-branding">
+        {{ if .Site.Params.header.logo_img }}
+        <p class="site-logo"><a href="{{ $.Site.Params.header.url | default "/" | relURL }}"><img src="{{ $.Site.Params.header.logo_img | relURL }}" alt="{{ $.Site.Params.header.logo_img_alt }}" /></a></p>
+        {{ else }}
+        <p class="site-title"><a href="{{ $.Site.Params.header.url | default "/" | relURL }}">{{ $.Site.Params.header.title }}</a></p>
+        {{ end }}
+      </div><!-- .site-branding -->
+      {{ if .Site.Params.header.has_nav }}
+      <nav id="main-navigation" class="site-navigation" aria-label="Main Navigation">
+        <div class="site-nav-inside">
+          <button id="menu-close" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-close" aria-hidden="true"></span></button>
+          <ul class="menu">
+          {{ range $action := $.Site.Params.header.nav_links }}
+            {{ $page_url := trim $.URL "/" }}
+            {{ $action_url := trim $action.url "/" }}
+            <li class="menu-item{{ if and $action.has_subnav $action.subnav_links }} has-children{{ end }}{{ if eq $page_url $action_url }} current{{ end }}{{ if ne $action.style "link" }} menu-button{{ end }}">
+              {{ $include_dict := dict "action" $action }}
+              {{ partial "action_link.html" $include_dict }}
+              {{ if and $action.has_subnav $action.subnav_links }}
+                <button class="submenu-toggle"><span class="icon-angle-right" aria-hidden="true"></span><span class="screen-reader-text">Sub-menu</span></button>
+                {{ $include_dict = dict "submenu" $action.subnav_links "menu_class" "submenu" "page" $ }}
+                {{ partial "submenu.html" $include_dict }}
+              {{ end }}
+            </li>
+          {{ end }}
+          </ul>
+        </div><!-- .site-nav-inside -->
+      </nav><!-- .site-navigation -->
+      <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Close Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+      {{ end }}
+    </div><!-- .site-header-inside -->
+  </div><!-- .inner -->
+</header><!-- .site-header -->

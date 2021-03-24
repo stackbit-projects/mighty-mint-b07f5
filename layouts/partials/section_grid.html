@@ -1,0 +1,52 @@
+{{ $section := .section }}
+<section id="{{ $section.section_id }}" class="block block-grid outer{{ if or $section.title $section.subtitle }} has-header{{ end }}">
+  <div class="inner">
+    {{ if or $section.title $section.subtitle }}
+    <div class="block-header inner-sm">
+      {{ if $section.title }}
+      <h2 class="block-title">{{ $section.title }}</h2>
+      {{ end }}
+      {{ if $section.subtitle }}
+      <p class="block-subtitle">{{ $section.subtitle | safeHTML }}</p>
+      {{ end }}
+    </div>
+    {{ end }}
+    {{ if $section.grid_items }}
+    <div class="block-content">
+      <div class="grid{{ if eq $section.col_number "two" }} grid-col-2{{ end }}{{ if eq $section.col_number "three" }} grid-col-3{{ end }}">
+        {{ range $item := $section.grid_items }}
+        <div class="grid-item">
+          <div class="grid-item-inside">
+            {{ if $item.image }}
+            <div class="grid-item-image">
+              <img src="{{ $item.image | relURL }}" alt="{{ $item.image_alt }}" />
+            </div>
+            {{ end }}
+            {{ if $item.title }}
+            <h3 class="grid-item-title line-left">
+              {{ if $item.title_url }}
+              <a href="{{ $item.title_url | relURL }}">{{ $item.title }}</a>
+              {{ else }}
+              {{ $item.title }}
+              {{ end }}
+            </h3>
+            {{ end }}
+            {{ if $item.content }}
+            <div class="grid-item-content">
+              {{ partial "markdownify-block" $item.content }}
+            </div>
+            {{ end }}
+            {{ if $item.actions }}
+            <div class="grid-item-buttons">
+              {{ $include_dict := dict "actions" $item.actions }}
+              {{ partial "cta_buttons.html" $include_dict }}
+            </div>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section><!-- .block -->

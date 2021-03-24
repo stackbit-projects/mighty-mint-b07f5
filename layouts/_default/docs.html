@@ -1,0 +1,40 @@
+{{ define "content" }}
+
+<div class="inner outer">
+  <div class="docs-content">
+    {{ $include_dict := dict "page" . "Site" .Site }}
+    {{ partial "docs_menu.html" $include_dict }}
+    <article class="post type-docs">
+      <div class="post-inside">
+        <header class="post-header">
+          <h1 class="post-title line-left">{{ .Params.title }}</h1>
+        </header><!-- .post-header -->
+        <div class="post-content">
+          {{ .Content }}
+          {{ $root_docs_path := trim .Site.Data.doc_sections.root_docs_path "/" }}
+          {{ $current_page_url := trim .URL "/" }}
+          {{ if ne $root_docs_path $current_page_url }}
+            {{ $child_pages := (($.Site.GetPage "section" $current_page_url).Pages).ByWeight }}
+            {{ $child_count := $child_pages | len }}
+            {{ $has_children := cond (gt $child_count 0) true false }}
+            {{ if $has_children }}
+              <ul id="docs-section-items" class="docs-section-items">
+                {{ range $child_page := $child_pages }}
+                <li class="docs-section-item"><a href="{{ $child_page.URL }}" class="docs-item-link">{{ $child_page.Title }}<span class="icon-angle-right" aria-hidden="true"></span></a></li>
+                {{ end }}
+              </ul><!-- .docs-section-pages -->
+            {{ end }}
+          {{ end }}
+        </div><!-- .post-content -->
+      </div><!-- .post-inside -->
+    </article><!-- .post -->
+    <nav id="page-nav" class="page-nav">
+      <div id="page-nav-inside" class="page-nav-inside sticky">
+        <h2 class="page-nav-title">Jump to Section</h2>
+        <div id="page-nav-link-container"></div>
+      </div><!-- .page-nav-inside -->
+    </nav><!-- .page-nav -->
+  </div><!-- .docs-content -->
+</div><!-- .inner-->
+
+{{ end }}

@@ -1,0 +1,10 @@
+{{ $child_pages := .child_pages }}
+{{ $page := .page }}
+
+<ul class="docs-submenu">
+  {{ range $child_page := $child_pages }}
+    <li class="docs-menu-item{{ if eq $page.URL $child_page.URL }} current{{ end }}">
+      <a href="{{ $child_page.URL }}">{{ $child_page.Title }}</a>
+    </li>
+  {{ end }}
+</ul>

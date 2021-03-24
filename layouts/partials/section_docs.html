@@ -1,0 +1,36 @@
+{{ $section := .section }}
+<section id="{{ $section.section_id }}" class="block block-grid outer{{ if or $section.title $section.subtitle }} has-header{{ end }}">
+  <div class="inner">
+    {{ if or $section.title $section.subtitle }}
+    <div class="block-header inner-sm">
+      {{ if $section.title }}
+      <h2 class="block-title">{{ $section.title }}</h2>
+      {{ end }}
+      {{ if $section.subtitle }}
+      <p class="block-subtitle">{{ $section.subtitle | safeHTML }}</p>
+      {{ end }}
+    </div>
+    {{ end }}
+    <div class="block-content">
+      <div class="grid{{ if eq $section.col_number "two" }} grid-col-2{{ end }}{{ if eq $section.col_number "three" }} grid-col-3{{ end }}">
+        {{ range $doc_section := .Site.Data.doc_sections.sections }}
+          {{ $doc_section_path := path.Join $.Site.Data.doc_sections.root_docs_path $doc_section }}
+          {{ $doc_section_page := $.Site.GetPage "page" $doc_section_path }}
+          <div class="grid-item">
+            <div class="grid-item-inside">
+              <h3 class="grid-item-title line-left"><a href="{{ $doc_section_page.URL }}">{{ $doc_section_page.Title }}</a></h3>
+              {{ if $doc_section_page.Params.excerpt }}
+              <div class="grid-item-content">
+                <p>{{ $doc_section_page.Params.excerpt | safeHTML }}</p>
+              </div>
+              {{ end }}
+              <div class="grid-item-buttons">
+                <a href="{{ $doc_section_page.URL }}">Learn More</a>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section><!-- .block -->
